@@ -60,15 +60,18 @@ class WordleSolver:
     def get_best_word(self):
         best_word = None
         best_word_score = 0
+        sum_scores = 0
         for word, score in self.word_values.items():
             if score > best_word_score:
                 best_word = word
                 best_word_score = score
-        return best_word, best_word_score
+            sum_scores += score
+        return best_word, best_word_score/sum_scores
 
     def eliminate_letters(self, bad_letters):
         for letter in bad_letters:
-            self.alphabet.remove(letter)
+            if letter in self.alphabet:
+                self.alphabet.remove(letter)
 
     def eliminate_words(self):
         removed_words = []
@@ -107,9 +110,11 @@ class WordleSolver:
             if info.isupper():
                 self.known_letters[index] = info.lower()
         self.eliminate_letters(removed_letters)
-        print(self.alphabet)
+        #print(self.alphabet)
         self.eliminate_words()
         self.update_word_values()
+        if len(self.words) == 0:
+            self.solved = True
 
 
 # Press the green button in the gutter to run the script.
